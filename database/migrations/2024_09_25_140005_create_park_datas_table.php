@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('qr_guests', function (Blueprint $table) {
+        Schema::create('park_datas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('PIC');
-            $table->text('description');
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->foreignId('park_area_id')->constrained('park_areas')->onDelete('cascade');
+            $table->time('start_hour');
+            $table->time('end_hour');
+            $table->integer('available');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('qr_guests');
+        Schema::dropIfExists('park_data');
     }
 };

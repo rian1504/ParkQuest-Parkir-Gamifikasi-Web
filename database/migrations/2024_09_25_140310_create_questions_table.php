@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('questions', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('survey_id')->constrained('surveys')->onDelete('cascade');
             $table->string('question');
             $table->timestamps();

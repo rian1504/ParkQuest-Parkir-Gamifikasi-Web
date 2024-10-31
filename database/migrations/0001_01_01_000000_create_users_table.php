@@ -13,16 +13,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
-            $table->foreignId('rank_id')->constrained('ranks')->onDelete('cascade');
+            $table->foreignId('role_id')->nullable()->constrained('roles')->nullOnDelete();
+            $table->foreignId('rank_id')->nullable()->constrained('ranks')->nullOnDelete();
             $table->string('name');
             $table->string('username')->unique();
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('total_exp');
-            $table->integer('coin');
-            $table->integer('referral_code');
-            $table->string('qr_code');
+            $table->integer('total_exp')->default(0);
+            $table->integer('coin')->default(0);
+            $table->string('referral_code')->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
 
