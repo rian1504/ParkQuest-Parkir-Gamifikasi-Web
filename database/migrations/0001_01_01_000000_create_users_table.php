@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('password');
             $table->integer('total_exp')->default(0);
             $table->integer('coin')->default(0);
-            $table->string('referral_code')->nullable();
+            $table->string('referral_code')->nullable()->unique();
             $table->rememberToken();
             $table->timestamps();
         });
