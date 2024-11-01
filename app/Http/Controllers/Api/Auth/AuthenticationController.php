@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthenticationController extends Controller
@@ -66,6 +67,29 @@ class AuthenticationController extends Controller
             'message' => 'Berhasil Login',
             'data' => $user,
             'token' => $userToken,
+        ], 200);
+    }
+
+    public function user()
+    {
+        $user = Auth::user();
+
+        return response([
+            'code' => 200,
+            'status' => true,
+            'message' => 'Berhasil',
+            'data' => $user,
+        ], 200);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+
+        return response([
+            'code' => 200,
+            'status' => true,
+            'message' => 'Berhasil Logout',
         ], 200);
     }
 }

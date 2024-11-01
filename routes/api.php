@@ -11,3 +11,10 @@ use Illuminate\Support\Facades\Route;
 // Authentication
 Route::post('/register', [AuthenticationController::class, 'register']);
 Route::post('/login', [AuthenticationController::class, 'login']);
+
+Route::group(['middleware' => 'auth:sanctum'], function () {
+
+    // User route
+    Route::get('/user', [AuthenticationController::class, 'user']);
+    Route::post('/logout', [AuthenticationController::class, 'logout']);
+});
