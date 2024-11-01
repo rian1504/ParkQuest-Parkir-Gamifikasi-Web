@@ -17,7 +17,7 @@ class AuthenticationController extends Controller
             'name' => 'required|min:4',
             'username' => 'required|string|min:4|unique:users',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
+            'password' => 'required|min:6|confirmed',
         ]);
 
         $referral_code = Str::random(10);
