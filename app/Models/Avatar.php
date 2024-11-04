@@ -11,6 +11,8 @@ class Avatar extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function rarity(): BelongsTo
     {
         return $this->belongsTo(Rarity::class);

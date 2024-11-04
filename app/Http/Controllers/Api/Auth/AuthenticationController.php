@@ -46,11 +46,12 @@ class AuthenticationController extends Controller
     public function login(Request $request)
     {
         $request->validate([
+            'role_id' => 'required',
             'username' => 'required|min:4|string',
             'password' => 'required|min:6',
         ]);
 
-        $user = User::whereUsername($request->username)->first();
+        $user = User::whereUsername($request->username)->where('role_id', $request->role_id)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response([
                 'code' => 422,

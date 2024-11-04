@@ -11,6 +11,8 @@ class Survey extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function reward(): BelongsTo
     {
         return $this->belongsTo(Reward::class);

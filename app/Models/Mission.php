@@ -11,6 +11,8 @@ class Mission extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function mission_category(): BelongsTo
     {
         return $this->belongsTo(MissionCategory::class);

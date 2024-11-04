@@ -11,6 +11,8 @@ class Reward extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function reward_type(): BelongsTo
     {
         return $this->belongsTo(RewardType::class);

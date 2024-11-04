@@ -10,6 +10,8 @@ class ParkCategory extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function park_area(): HasMany
     {
         return $this->hasMany(ParkArea::class);

@@ -11,6 +11,8 @@ class ParkArea extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function park_category(): BelongsTo
     {
         return $this->belongsTo(ParkCategory::class);

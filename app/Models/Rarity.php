@@ -10,6 +10,8 @@ class Rarity extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function avatar(): HasMany
     {
         return $this->hasMany(Avatar::class);

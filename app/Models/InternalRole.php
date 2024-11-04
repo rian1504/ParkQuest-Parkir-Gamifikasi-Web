@@ -10,6 +10,8 @@ class InternalRole extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function internal(): HasMany
     {
         return $this->hasMany(Internal::class);

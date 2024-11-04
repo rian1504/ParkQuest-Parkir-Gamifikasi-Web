@@ -10,6 +10,8 @@ class MissionCategory extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function mission(): HasMany
     {
         return $this->hasMany(Mission::class);

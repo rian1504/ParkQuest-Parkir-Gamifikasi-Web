@@ -10,6 +10,8 @@ class ParkData extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function park_area(): BelongsTo
     {
         return $this->belongsTo(ParkArea::class);

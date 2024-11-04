@@ -10,6 +10,8 @@ class ParkRecommendationAccepted extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function park_recommendation(): BelongsTo
     {
         return $this->belongsTo(ParkRecommendation::class);

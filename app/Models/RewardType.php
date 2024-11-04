@@ -10,6 +10,8 @@ class RewardType extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function reward(): HasMany
     {
         return $this->hasMany(Reward::class);

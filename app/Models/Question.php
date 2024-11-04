@@ -10,6 +10,8 @@ class Question extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function survey(): BelongsTo
     {
         return $this->belongsTo(Survey::class);
