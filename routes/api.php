@@ -21,4 +21,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     // Leaderboard
     Route::get('/topThree', [LeaderboardController::class, 'topThree']);
+    Route::get('/leaderboard', [LeaderboardController::class, 'leaderboard']);
+    Route::get('/userLeaderboard', [LeaderboardController::class, 'userLeaderboard']);
 });
