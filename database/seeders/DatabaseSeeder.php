@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             'email' => env('EMAIL'),
             'email_verified_at' => now(),
             'password' => Hash::make(env('PASSWORD')),
+            'is_admin' => env('IS_ADMIN'),
         ]);
     }
 }

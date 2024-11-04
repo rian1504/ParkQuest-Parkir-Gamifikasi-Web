@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('total_exp')->default(0);
             $table->integer('coin')->default(0);
             $table->string('referral_code')->nullable()->unique();
+            $table->boolean('is_admin')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });
