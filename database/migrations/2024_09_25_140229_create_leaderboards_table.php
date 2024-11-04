@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rank_up_dates', function (Blueprint $table) {
+        Schema::create('leaderboards', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('rank_id')->constrained('ranks')->onDelete('cascade');

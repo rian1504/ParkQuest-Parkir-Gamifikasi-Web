@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('eksternals', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->integer('NIK/KTP');
             $table->string('agency/company');
             $table->string('position');
             $table->timestamps();

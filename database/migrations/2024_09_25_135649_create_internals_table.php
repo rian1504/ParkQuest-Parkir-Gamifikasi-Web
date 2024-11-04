@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('internals', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('internal_role_id')->nullable()->constrained('internal_roles')->nullOnDelete();
-            $table->integer('NIM/NID/NIK');
             $table->timestamps();
         });
     }

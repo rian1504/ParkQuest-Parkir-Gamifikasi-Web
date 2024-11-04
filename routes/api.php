@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthenticationController;
+use App\Http\Controllers\Api\LeaderboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +15,10 @@ Route::post('/login', [AuthenticationController::class, 'login']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
-    // User route
+    // User
     Route::get('/user', [AuthenticationController::class, 'user']);
     Route::post('/logout', [AuthenticationController::class, 'logout']);
+
+    // Leaderboard
+    Route::get('/topThree', [LeaderboardController::class, 'topThree']);
 });

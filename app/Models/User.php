@@ -96,9 +96,9 @@ class User extends Authenticatable
         return $this->hasMany(UserMission::class);
     }
 
-    public function rank_up_date(): HasMany
+    public function leaderboard(): HasMany
     {
-        return $this->hasMany(RankUpDate::class);
+        return $this->hasMany(Leaderboard::class);
     }
 
     public function user_avatar(): HasMany

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('identity_number')->nullable();
             $table->integer('total_exp')->default(0);
             $table->integer('coin')->default(0);
             $table->string('referral_code')->nullable()->unique();

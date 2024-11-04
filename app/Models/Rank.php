@@ -22,8 +22,8 @@ class Rank extends Model
         return $this->hasMany(Mission::class);
     }
 
-    public function rank_up_date(): HasMany
+    public function leaderboard(): HasMany
     {
-        return $this->hasMany(RankUpDate::class);
+        return $this->hasMany(Leaderboard::class);
     }
 }
