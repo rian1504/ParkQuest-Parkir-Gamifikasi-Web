@@ -77,7 +77,7 @@ class RarityResource extends Resource
                     ->numeric()
                     ->sortable()
                     ->suffix(' Koin'),
-            ])
+            ])->defaultSort('id', 'desc')
             ->filters([
                 //
             ])

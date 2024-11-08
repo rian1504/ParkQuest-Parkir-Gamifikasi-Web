@@ -59,7 +59,7 @@ class RoleResource extends Resource
                     ->label('Nama Role')
                     ->searchable()
                     ->sortable(),
-            ])
+            ])->defaultSort('id', 'desc')
             ->filters([
                 //
             ])

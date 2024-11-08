@@ -62,7 +62,7 @@ class ParkCategoryResource extends Resource
                     ->label('Kategori Parkir')
                     ->searchable()
                     ->sortable(),
-            ])
+            ])->defaultSort('id', 'desc')
             ->filters([
                 //
             ])

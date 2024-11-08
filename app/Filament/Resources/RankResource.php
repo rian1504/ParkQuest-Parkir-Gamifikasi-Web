@@ -74,7 +74,7 @@ class RankResource extends Resource
                     ->numeric()
                     ->sortable()
                     ->suffix(' EXP'),
-            ])
+            ])->defaultSort('id', 'desc')
             ->filters([
                 //
             ])

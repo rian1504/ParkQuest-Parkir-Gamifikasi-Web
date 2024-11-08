@@ -62,7 +62,7 @@ class MissionCategoryResource extends Resource
                     ->label('Kategori Misi')
                     ->searchable()
                     ->sortable(),
-            ])
+            ])->defaultSort('id', 'desc')
             ->filters([
                 //
             ])

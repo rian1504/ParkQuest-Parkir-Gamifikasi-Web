@@ -21,8 +21,12 @@ use App\Filament\Resources\ParkDataResource\RelationManagers;
 use App\Filament\Resources\ParkDataResource\Pages\EditParkData;
 use App\Filament\Resources\ParkDataResource\Pages\ListParkData;
 use App\Filament\Resources\ParkDataResource\Pages\CreateParkData;
+use App\Models\ParkArea;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TimePicker;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Columns\TextColumn;
 
 class ParkDataResource extends Resource
 {
@@ -42,9 +46,49 @@ class ParkDataResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $parkArea = ParkArea::all();
+
         return $form
             ->schema([
-                //
+                Select::make('park_area_id')
+                    ->label('Area Parkir')
+                    ->options($parkArea->pluck('park_name', 'id'))
+                    ->native(false)
+                    ->validationMessages([
+                        'required' => 'Area Parkir wajib diisi',
+                    ])
+                    ->required(),
+                TextInput::make('start_hour')
+                    ->label('Jam Mulai')
+                    ->required()
+                    ->validationMessages([
+                        'required' => 'Jam Mulai wajib diisi',
+                        'minValue' => 'Jam Akhir tidak boleh kurang dari 1',
+                        'maxValue' => 'Jam Akhir tidak boleh lebih dari 23',
+                    ])
+                    ->numeric()
+                    ->minValue(1)
+                    ->maxValue(23),
+                TextInput::make('end_hour')
+                    ->label('Jam Akhir')
+                    ->required()
+                    ->validationMessages([
+                        'required' => 'Jam Akhir wajib diisi',
+                        'minValue' => 'Jam Akhir tidak boleh kurang dari 2',
+                        'maxValue' => 'Jam Akhir tidak boleh lebih dari 24',
+                    ])
+                    ->numeric()
+                    ->minValue(2)
+                    ->maxValue(24),
+                TextInput::make('available')
+                    ->label('Ketersediaan Parkir')
+                    ->required()
+                    ->validationMessages([
+                        'required' => 'Ketersediaan Parkir wajib diisi',
+                        'minValue' => 'Ketersediaan Parkir tidak boleh minus',
+                    ])
+                    ->numeric()
+                    ->minValue(0),
             ]);
     }
 
@@ -52,17 +96,30 @@ class ParkDataResource extends Resource
     {
         return $table
             ->columns([
-                //
-            ])
+                TextColumn::make('No')
+                    ->rowIndex(),
+                TextColumn::make('park_area.park_name')
+                    ->label('Nama Area Parkir'),
+                TextColumn::make('start_hour')
+                    ->label('Jam Mulai')
+                    ->suffix(':00'),
+                TextColumn::make('end_hour')
+                    ->label('Jam Akhir')
+                    ->suffix(':00'),
+                TextColumn::make('available')
+                    ->label('Ketersediaan Parkir')
+                    ->suffix(' unit'),
+            ])->defaultSort('id', 'desc')
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -77,9 +134,9 @@ class ParkDataResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListParkData::route('/'),
-            'create' => Pages\CreateParkData::route('/create'),
-            'edit' => Pages\EditParkData::route('/{record}/edit'),
+            'index' => ListParkData::route('/'),
+            'create' => CreateParkData::route('/create'),
+            'edit' => EditParkData::route('/{record}/edit'),
         ];
     }
 }

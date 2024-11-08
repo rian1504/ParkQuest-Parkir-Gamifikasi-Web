@@ -62,7 +62,7 @@ class RewardTypeResource extends Resource
                     ->label('Tipe Hadiah')
                     ->searchable()
                     ->sortable(),
-            ])
+            ])->defaultSort('id', 'desc')
             ->filters([
                 //
             ])

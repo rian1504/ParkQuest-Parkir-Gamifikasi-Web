@@ -118,7 +118,7 @@ class ParkAreaResource extends Resource
                     ->suffix(' unit'),
                 TextColumn::make('park_coordinate')
                     ->label('Koordinat Parkir'),
-            ])
+            ])->defaultSort('id', 'desc')
             ->filters([
                 //
             ])
