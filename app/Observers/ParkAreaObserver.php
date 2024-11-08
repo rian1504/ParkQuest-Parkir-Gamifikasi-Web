@@ -9,7 +9,7 @@ class ParkAreaObserver
 {
     public function saved(ParkArea $parkArea): void
     {
-        if ($parkArea->isDirty('park_image')) {
+        if (!$parkArea->wasRecentlyCreated && $parkArea->isDirty('park_image')) {
             Storage::disk('public')->delete($parkArea->getOriginal('park_image'));
         }
     }
