@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('mission_category_id')->constrained('mission_categories')->onDelete('cascade');
             $table->foreignId('reward_id')->constrained('rewards')->onDelete('cascade');
-            $table->foreignId('rank_required_id')->constrained('ranks')->onDelete('cascade');
+            $table->foreignId('rank_id')->constrained('ranks')->onDelete('cascade');
             $table->string('mission_name');
             $table->text('mission_description');
             $table->timestamps();

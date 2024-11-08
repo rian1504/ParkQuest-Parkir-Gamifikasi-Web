@@ -105,7 +105,7 @@ class ParkAreaResource extends Resource
                 TextColumn::make('No')
                     ->rowIndex(),
                 TextColumn::make('park_category.park_category_name')
-                    ->label('Nama Kategori Parkir'),
+                    ->label('Kategori Parkir'),
                 TextColumn::make('park_name')
                     ->label('Nama Parkir')
                     ->searchable(),
