@@ -31,7 +31,7 @@ class MissionResource extends Resource
 {
     protected static ?string $model = Mission::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-truck';
+    protected static ?string $navigationIcon = 'heroicon-o-command-line';
 
     protected static ?string $navigationLabel = 'Misi';
 
@@ -39,7 +39,7 @@ class MissionResource extends Resource
 
     protected static ?string $modelLabel = 'Misi';
 
-    protected static ?string $navigationGroup = 'Data User';
+    protected static ?string $navigationGroup = 'Data Misi';
 
     protected static ?int $navigationSort = 4;
 

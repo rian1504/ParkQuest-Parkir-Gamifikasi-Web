@@ -28,7 +28,7 @@ class RewardResource extends Resource
 {
     protected static ?string $model = Reward::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-truck';
+    protected static ?string $navigationIcon = 'heroicon-o-gift-top';
 
     protected static ?string $navigationLabel = 'Hadiah';
 
@@ -36,9 +36,9 @@ class RewardResource extends Resource
 
     protected static ?string $modelLabel = 'Hadiah';
 
-    protected static ?string $navigationGroup = 'Data User';
+    protected static ?string $navigationGroup = 'Data Misi';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {

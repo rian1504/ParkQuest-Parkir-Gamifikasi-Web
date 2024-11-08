@@ -32,7 +32,7 @@ class ParkDataResource extends Resource
 {
     protected static ?string $model = ParkData::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-truck';
+    protected static ?string $navigationIcon = 'heroicon-o-document-chart-bar';
 
     protected static ?string $navigationLabel = 'Data Parkir';
 

@@ -32,7 +32,7 @@ class ParkAreaResource extends Resource
 {
     protected static ?string $model = ParkArea::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-truck';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
 
     protected static ?string $navigationLabel = 'Area Parkir';
 
