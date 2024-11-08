@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('park_name');
             $table->string('park_image');
             $table->integer('park_capacity');
-            $table->string('park_information');
+            $table->text('park_information');
+            $table->string('park_coordinate');
             $table->timestamps();
         });
     }

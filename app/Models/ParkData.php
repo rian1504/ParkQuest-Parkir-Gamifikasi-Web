@@ -10,6 +10,8 @@ class ParkData extends Model
 {
     use HasFactory;
 
+    protected $table = 'park_datas';
+
     protected $guarded = ['id'];
 
     public function park_area(): BelongsTo
