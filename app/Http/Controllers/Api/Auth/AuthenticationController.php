@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Eksternal;
-use App\Models\Internal;
 use App\Models\Leaderboard;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -52,16 +51,8 @@ class AuthenticationController extends Controller
             'referral_code' => $referral_code,
         ]);
 
-        // Membuat data internal atau eksternal
-        // Role Internal
-        if ($request->role_id == 1) {
-            Internal::create([
-                'user_id' => $user->id,
-                'internal_role_id' => 1,
-            ]);
-        }
-        // Role Eksternal
-        elseif ($request->role_id == 2) {
+        // Membuat data eksternal
+        if ($request->role_id == 2) {
             Eksternal::create([
                 'user_id' => $user->id,
                 'agency/company' => $request->company,

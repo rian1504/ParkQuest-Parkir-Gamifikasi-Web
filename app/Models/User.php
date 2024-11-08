@@ -89,11 +89,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(ParkRecommendation::class);
     }
 
-    public function internal(): HasMany
-    {
-        return $this->hasMany(Internal::class);
-    }
-
     public function eksternal(): HasMany
     {
         return $this->hasMany(Eksternal::class);
