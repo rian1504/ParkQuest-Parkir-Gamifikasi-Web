@@ -22,6 +22,7 @@ use App\Filament\Resources\SurveyResource\RelationManagers;
 use App\Filament\Resources\SurveyResource\Pages\ListSurveys;
 use App\Filament\Resources\SurveyResource\Pages\CreateSurvey;
 use App\Filament\Resources\SurveyResource\Pages\ViewSurvey;
+use App\Filament\Resources\SurveyResource\RelationManagers\QuestionRelationManager;
 use App\Models\Reward;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Actions\DeleteAction;
@@ -120,7 +121,7 @@ class SurveyResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            QuestionRelationManager::class
         ];
     }
 
