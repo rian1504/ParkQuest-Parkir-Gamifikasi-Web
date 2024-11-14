@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthenticationController;
 use App\Http\Controllers\Api\LeaderboardController;
+use App\Http\Controllers\Api\ParkRecommendationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +24,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/topThree', [LeaderboardController::class, 'topThree']);
     Route::get('/leaderboard', [LeaderboardController::class, 'leaderboard']);
     Route::get('/userLeaderboard', [LeaderboardController::class, 'userLeaderboard']);
+
+    // Rekomendasi Parkir
+    Route::get('/parkArea', [ParkRecommendationController::class, 'parkArea']);
+    Route::post('/parkRecommendation/{parkArea}', [ParkRecommendationController::class, 'parkRecommendation']);
 });
