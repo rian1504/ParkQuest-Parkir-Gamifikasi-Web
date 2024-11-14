@@ -27,10 +27,13 @@ class ParkRecommendationController extends Controller
     }
 
     // Merekomendasi parkir
-    public function parkRecommendation(Request $request, $parkArea)
+    public function parkRecommendation(Request $request, ParkArea $parkArea)
     {
         // Mengambil id user
         $userId = Auth::user()->id;
+
+        // Mengambil id user
+        $parkAreaId = $parkArea->id;
 
         // Validasi Input
         $request->validate([
@@ -45,7 +48,7 @@ class ParkRecommendationController extends Controller
 
         // Membuat data rekomendasi
         $data = ParkRecommendation::create([
-            'park_area_id' => $parkArea,
+            'park_area_id' => $parkAreaId,
             'user_id' => $userId,
             'capacity' => $request->capacity,
             'image' => $image->hashName(),
