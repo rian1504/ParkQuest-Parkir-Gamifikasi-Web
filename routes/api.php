@@ -34,4 +34,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/parkAreaSearch', [ParkSearchController::class, 'parkArea']);
     Route::get('/parkData/{parkArea}', [ParkSearchController::class, 'parkData']);
     Route::get('/parkRecommendation', [ParkSearchController::class, 'parkRecommendation']);
+    Route::post('/parkRecommendationAccepted/{parkRecommendation}', [ParkSearchController::class, 'parkRecommendationAccepted']);
 });

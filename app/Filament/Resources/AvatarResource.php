@@ -97,7 +97,7 @@ class AvatarResource extends Resource
                     ->label('Gambar Avatar')
                     ->circular()
                     ->size(80),
-            ])
+            ])->defaultSort('id', 'desc')
             ->filters([
                 //
             ])

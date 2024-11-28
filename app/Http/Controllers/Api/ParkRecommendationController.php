@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ParkArea;
 use App\Models\ParkRecommendation;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -32,7 +33,7 @@ class ParkRecommendationController extends Controller
         // Mengambil id user
         $userId = Auth::user()->id;
 
-        // Mengambil id user
+        // Mengambil id park area
         $parkAreaId = $parkArea->id;
 
         // Validasi Input
@@ -54,6 +55,10 @@ class ParkRecommendationController extends Controller
             'image' => $image->hashName(),
             'description' => $request->description,
         ]);
+
+        // Menambahkan exp ke user
+        $recommendationUser = User::findOrFail($userId);
+        $recommendationUser->increment('total_exp', 20);
 
         // Mengembalikan response API
         return response([

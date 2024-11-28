@@ -100,7 +100,7 @@ class SurveyResource extends Resource
                 TextColumn::make('survey_name')
                     ->label('Nama Survey')
                     ->searchable(),
-            ])
+            ])->defaultSort('id', 'desc')
             ->filters([
                 //
             ])

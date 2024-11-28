@@ -21,6 +21,10 @@ class QuestionRelationManager extends RelationManager
 {
     protected static string $relationship = 'question';
 
+    protected static ?string $navigationLabel = 'Pertanyaan';
+
+    protected static ?string $modelLabel = 'Pertanyaan';
+
     public function form(Form $form): Form
     {
         return $form
