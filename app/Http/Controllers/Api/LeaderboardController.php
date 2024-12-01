@@ -14,7 +14,7 @@ class LeaderboardController extends Controller
     {
         // Mengambil data leaderboard
         $data = Leaderboard::join('users', 'leaderboards.user_id', '=', 'users.id')
-            ->with(['user', 'rank'])
+            ->with('rank')
             ->orderBy('users.total_exp', 'desc')
             ->limit(3)
             ->get();
@@ -33,7 +33,7 @@ class LeaderboardController extends Controller
     {
         // Mengambil data leaderboard
         $data = Leaderboard::join('users', 'leaderboards.user_id', '=', 'users.id')
-            ->with(['user', 'rank'])
+            ->with('rank')
             ->orderBy('users.total_exp', 'desc')
             ->limit(100)
             ->get();
@@ -54,7 +54,7 @@ class LeaderboardController extends Controller
         $userId = Auth::user()->id;
 
         // Mengambil data leaderboard
-        $data = Leaderboard::with('user')->with('rank')
+        $data = Leaderboard::with(['user', 'rank'])
             ->where('user_id', $userId)->get();
 
         // Mengembalikan response API
