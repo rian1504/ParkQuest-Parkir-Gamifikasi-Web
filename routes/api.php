@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AvatarController;
 use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\ParkRecommendationController;
 use App\Http\Controllers\Api\ParkSearchController;
+use App\Http\Controllers\Api\ReferralController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -54,4 +55,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::get('/detail/{avatar}', [AvatarController::class, 'inventoryDetail']);
         Route::post('/updateAvatar/{avatar}', [AvatarController::class, 'updateAvatar']);
     });
+
+    // Kode Referral
+    Route::get('/referral', [ReferralController::class, 'index']);
+    Route::post('/referral', [ReferralController::class, 'store']);
 });
