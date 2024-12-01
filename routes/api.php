@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthenticationController;
+use App\Http\Controllers\Api\AvatarController;
 use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\ParkRecommendationController;
 use App\Http\Controllers\Api\ParkSearchController;
@@ -35,4 +36,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/parkData/{parkArea}', [ParkSearchController::class, 'parkData']);
     Route::get('/parkRecommendation', [ParkSearchController::class, 'parkRecommendation']);
     Route::post('/parkRecommendationAccepted/{parkRecommendation}', [ParkSearchController::class, 'parkRecommendationAccepted']);
+
+    // Avatar
+    Route::get('/basic', [AvatarController::class, 'basic']);
+    Route::get('/rare', [AvatarController::class, 'rare']);
+    Route::get('/legendary', [AvatarController::class, 'legendary']);
+    Route::get('/shopDetail/{avatar}', [AvatarController::class, 'shopDetail']);
+    Route::post('/buyAvatar/{avatar}', [AvatarController::class, 'buyAvatar']);
 });

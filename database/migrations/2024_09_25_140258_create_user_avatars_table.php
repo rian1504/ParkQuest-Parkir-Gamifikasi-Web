@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('avatar_id')->constrained('avatars')->onDelete('cascade');
-            $table->boolean('is_equipped');
+            $table->boolean('is_equipped')->default(0);
             $table->timestamps();
         });
     }
