@@ -38,9 +38,20 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/parkRecommendationAccepted/{parkRecommendation}', [ParkSearchController::class, 'parkRecommendationAccepted']);
 
     // Avatar
-    Route::get('/basic', [AvatarController::class, 'basic']);
-    Route::get('/rare', [AvatarController::class, 'rare']);
-    Route::get('/legendary', [AvatarController::class, 'legendary']);
-    Route::get('/shopDetail/{avatar}', [AvatarController::class, 'shopDetail']);
-    Route::post('/buyAvatar/{avatar}', [AvatarController::class, 'buyAvatar']);
+    // Shop
+    Route::prefix('shop')->group(function () {
+        Route::get('/basic', [AvatarController::class, 'shopBasic']);
+        Route::get('/rare', [AvatarController::class, 'shopRare']);
+        Route::get('/legendary', [AvatarController::class, 'shopLegendary']);
+        Route::get('/detail/{avatar}', [AvatarController::class, 'shopDetail']);
+        Route::post('/buyAvatar/{avatar}', [AvatarController::class, 'buyAvatar']);
+    });
+    // Inventory
+    Route::prefix('inventory')->group(function () {
+        Route::get('/basic', [AvatarController::class, 'inventoryBasic']);
+        Route::get('/rare', [AvatarController::class, 'inventoryRare']);
+        Route::get('/legendary', [AvatarController::class, 'inventoryLegendary']);
+        Route::get('/detail/{avatar}', [AvatarController::class, 'inventoryDetail']);
+        Route::post('/updateAvatar/{avatar}', [AvatarController::class, 'updateAvatar']);
+    });
 });
