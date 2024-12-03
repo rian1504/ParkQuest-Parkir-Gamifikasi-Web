@@ -11,6 +11,7 @@ use App\Models\Leaderboard;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class AuthenticationController extends Controller
 {
@@ -114,10 +115,15 @@ class AuthenticationController extends Controller
     }
 
     // Mengambil data user login
-    public function user()
+    public function profile()
     {
         // Mengambil data user
         $user = Auth::user();
+
+        // Mengambil data user Role Eksternal
+        if ($user->role_id == 2) {
+            $user = User::with('eksternal')->where('id', $user->id)->get();
+        }
 
         // Mengembalikan response API
         return response([
@@ -125,6 +131,108 @@ class AuthenticationController extends Controller
             'status' => true,
             'message' => 'Berhasil',
             'data' => $user,
+        ], 200);
+    }
+
+    // Ubah profile
+    public function editProfile(Request $request)
+    {
+        // Mengambil id user
+        $userId = Auth::user()->id;
+
+        // validasi input
+        $request->validate([
+            'name' => 'required|min:4',
+            'username' => [
+                'required',
+                'string',
+                'min:4',
+                Rule::unique('users')->ignore($userId),
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore($userId)
+            ],
+            'identity_number' => [
+                'required',
+                'digits_between:6,16',
+                'numeric',
+                Rule::unique('users')->ignore($userId)
+            ],
+        ]);
+
+        // Validasi tambahan Role Eksternal
+        if (Auth::user()->role_id == 2) {
+            // Validasi Input
+            $request->validate([
+                'company' => 'required|string|min:4',
+                'position' => 'required|string|min:4',
+            ]);
+        }
+
+        // Update User Profile
+        $user = User::findOrFail($userId);
+        $user->update([
+            'name' => $request->name,
+            'username' => $request->username,
+            'email' => $request->email,
+            'identity_number' => $request->identity_number,
+        ]);
+
+        // Update tambahan Role Eksternal
+        if (Auth::user()->role_id == 2) {
+            $userEksternal = Eksternal::where('user_id', $userId);
+            $userEksternal->update([
+                'agency/company' => $request->company,
+                'position' => $request->position,
+            ]);
+
+            // Mengambil data user Role Eksternal
+            $user = User::with('eksternal')->where('id', $userId)->get();
+        }
+
+        // Mengembalikan response API
+        return response([
+            'code' => 200,
+            'status' => true,
+            'data' => $user,
+            'message' => 'Berhasil Update Profile',
+        ], 200);
+    }
+
+    // Ubah Password
+    public function editPassword(Request $request)
+    {
+        // Mengambil id user
+        $user = Auth::user();
+
+        // Validasi input
+        $request->validate([
+            'old_password' => 'required|min:6',
+            'new_password' => 'required|min:6|confirmed',
+        ]);
+
+        if (!Hash::check($request->old_password, $user->password)) {
+            // Mengembalikan response API Gagal
+            return response([
+                'code' => 400,
+                'status' => false,
+                'message' => 'Password lama tidak sesuai',
+            ], 400);
+        }
+
+        // Jika password sesuai
+        $user = User::findOrFail($user->id);
+        $user->update([
+            'password' => Hash::make($request->new_password),
+        ]);
+
+        // Mengembalikan response API
+        return response([
+            'code' => 200,
+            'status' => true,
+            'message' => 'Berhasil Update Password',
         ], 200);
     }
 

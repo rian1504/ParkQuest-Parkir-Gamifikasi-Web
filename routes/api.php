@@ -19,8 +19,10 @@ Route::post('/login', [AuthenticationController::class, 'login']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
-    // User
-    Route::get('/user', [AuthenticationController::class, 'user']);
+    // Profile
+    Route::get('/profile', [AuthenticationController::class, 'profile']);
+    Route::post('/profile', [AuthenticationController::class, 'editProfile']);
+    Route::post('/password', [AuthenticationController::class, 'editPassword']);
     Route::post('/logout', [AuthenticationController::class, 'logout']);
 
     // Leaderboard
