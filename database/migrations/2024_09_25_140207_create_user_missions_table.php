@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('mission_id')->constrained('missions')->onDelete('cascade');
-            $table->text('description');
-            $table->integer('persentage');
+            $table->integer('streak');
             $table->string('status');
+            $table->integer('week_number')->nullable();
             $table->timestamps();
         });
     }

@@ -46,7 +46,7 @@ class MissionResource extends Resource
     public static function form(Form $form): Form
     {
         $missionCategory = MissionCategory::all();
-        $reward = Reward::all();
+        $reward = Reward::with('reward_type')->get();
         $rank = Rank::all();
 
         return $form
@@ -61,7 +61,13 @@ class MissionResource extends Resource
                     ->required(),
                 Select::make('reward_id')
                     ->label('Hadiah')
-                    ->options($reward->pluck('reward_amount', 'id'))
+                    ->options(
+                        $reward->mapWithKeys(function ($reward) {
+                            return [
+                                $reward->id => $reward->reward_type->reward_type_name . ' - ' . $reward->reward_amount,
+                            ];
+                        })
+                    )
                     ->native(false)
                     ->validationMessages([
                         'required' => 'Hadiah wajib diisi',
@@ -70,11 +76,7 @@ class MissionResource extends Resource
                 Select::make('rank_id')
                     ->label('Rank yang diperlukan')
                     ->options($rank->pluck('rank_name', 'id'))
-                    ->native(false)
-                    ->validationMessages([
-                        'required' => 'Rank yang diperlukan wajib diisi',
-                    ])
-                    ->required(),
+                    ->native(false),
                 TextInput::make('mission_name')
                     ->label('Nama Misi')
                     ->required()
@@ -82,6 +84,12 @@ class MissionResource extends Resource
                         'required' => 'Nama Misi wajib diisi',
                     ])
                     ->maxLength(255),
+                TextInput::make('day_start')
+                    ->label('Hari Mulai')
+                    ->numeric(),
+                TextInput::make('day_end')
+                    ->label('Hari Berakhir')
+                    ->numeric(),
                 Textarea::make('mission_description')
                     ->label('Deskripsi Misi')
                     ->autosize()
@@ -98,16 +106,22 @@ class MissionResource extends Resource
                     ->rowIndex(),
                 TextColumn::make('mission_category.mission_category_name')
                     ->label('Kategori Misi'),
-                TextColumn::make('reward.reward_type.reward_type_name')
-                    ->label('Tipe Hadiah'),
-                TextColumn::make('reward.reward_amount')
-                    ->label('Jumlah Hadiah'),
-                TextColumn::make('rank.rank_name')
-                    ->label('Rank yang diperlukan'),
                 TextColumn::make('mission_name')
                     ->label('Nama Misi')
                     ->description(fn(Mission $record): string => $record->mission_description)
                     ->searchable(),
+                TextColumn::make('day_start')
+                    ->label('Hari Mulai')
+                    ->alignCenter(),
+                TextColumn::make('day_end')
+                    ->label('Hari Berakhir')
+                    ->alignCenter(),
+                TextColumn::make('reward')
+                    ->label('Hadiah')
+                    ->formatStateUsing(fn($record) => $record->reward->reward_amount . ' ' . $record->reward->reward_type->reward_type_name),
+                TextColumn::make('rank.rank_name')
+                    ->label('Rank yang diperlukan')
+                    ->alignCenter(),
             ])->defaultSort('id', 'desc')
             ->filters([
                 //

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Auth\AuthenticationController;
 use App\Http\Controllers\Api\AvatarController;
 use App\Http\Controllers\Api\LeaderboardController;
+use App\Http\Controllers\Api\MissionController;
 use App\Http\Controllers\Api\ParkRecommendationController;
 use App\Http\Controllers\Api\ParkSearchController;
 use App\Http\Controllers\Api\ReferralController;
@@ -61,4 +62,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Kode Referral
     Route::get('/referral', [ReferralController::class, 'index']);
     Route::post('/referral', [ReferralController::class, 'store']);
+
+    // Misi
+    Route::post('/dailyLogin', [MissionController::class, 'dailyLogin']);
 });

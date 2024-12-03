@@ -93,13 +93,12 @@ class SurveyResource extends Resource
             ->columns([
                 TextColumn::make('No')
                     ->rowIndex(),
-                TextColumn::make('reward.reward_type.reward_type_name')
-                    ->label('Kategori Hadiah'),
-                TextColumn::make('reward.reward_amount')
-                    ->label('Jumlah Hadiah'),
                 TextColumn::make('survey_name')
                     ->label('Nama Survey')
                     ->searchable(),
+                TextColumn::make('reward')
+                    ->label('Hadiah')
+                    ->formatStateUsing(fn($record) => $record->reward->reward_amount . ' ' . $record->reward->reward_type->reward_type_name),
             ])->defaultSort('id', 'desc')
             ->filters([
                 //
