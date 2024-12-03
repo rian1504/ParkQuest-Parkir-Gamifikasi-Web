@@ -6,6 +6,7 @@ use App\Models\Mission;
 use App\Models\UserMission;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\MissionCategory;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,6 +19,8 @@ class MissionController extends Controller
         $userId = Auth::user()->id;
 
         // Ambil semua misi daily
+        // $dailyMission = MissionCategory::join('missions', 'mission_categories.id', '=', 'missions.mission_category_id')
+        //     ->where('mission_category_name', 'Daily')->get();
         $dailyMission = Mission::where('mission_category_id', 1)->get();
 
         // Ambil user mission
@@ -52,6 +55,7 @@ class MissionController extends Controller
 
         if ($currentMission) {
             $reward = $currentMission->reward;
+            // $reward = $currentMission->mission->reward;
 
             // Berikan hadiah ke pengguna
             $user = User::findOrFail($userId);

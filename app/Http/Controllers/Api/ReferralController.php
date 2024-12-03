@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Models\ReferralUsage;
-use App\Models\RewardType;
 use App\Models\User;
+use App\Models\RewardType;
+use App\Models\UserMission;
 use Illuminate\Http\Request;
+use App\Models\ReferralUsage;
+use App\Http\Controllers\Controller;
+use App\Models\MissionCategory;
 use Illuminate\Support\Facades\Auth;
 
 class ReferralController extends Controller
@@ -93,6 +95,31 @@ class ReferralController extends Controller
                     'usage_user_id' => $usageUserId,
                     'reward_id' => $referralRewardId
                 ]);
+
+                // Ambil semua misi lifetime
+                $mission = MissionCategory::join('missions', 'mission_categories.id', '=', 'missions.mission_category_id')
+                    ->where('mission_category_name', 'Lifetime')->get();
+
+                // Ambil user mission
+                $userMission = UserMission::firstOrNew(['user_id' => $usageUserId, 'mission_id' => $mission->first()->id]);
+
+                // Tingkatkan streak
+                $userMission->streak += 1;
+
+                // Jika streak mencapai 3
+                if ($userMission->streak >= 3) {
+                    $userMission->status = 'completed';
+
+                    // Berikan hadiah kepada pengguna
+                    $reward = $mission->first()->reward;
+                    $user = User::findOrFail($usageUserId);
+                    $user->increment('coin', $reward->reward_amount);
+                } else {
+                    $userMission->status = 'in progress';
+                }
+
+                // Simpan user mission
+                $userMission->save();
 
                 // Mengembalikan response API
                 return response([
