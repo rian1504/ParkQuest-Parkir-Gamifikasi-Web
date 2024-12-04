@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\MissionController;
 use App\Http\Controllers\Api\ParkRecommendationController;
 use App\Http\Controllers\Api\ParkSearchController;
 use App\Http\Controllers\Api\ReferralController;
+use App\Http\Controllers\Api\SurveyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -65,4 +66,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     // Misi
     Route::post('/dailyLogin', [MissionController::class, 'dailyLogin']);
+
+    // Survey
+    Route::get('/survey', [SurveyController::class, 'index']);
+    Route::get('/survey/{survey}', [SurveyController::class, 'show']);
+    Route::post('/survey/{survey}', [SurveyController::class, 'submit']);
 });

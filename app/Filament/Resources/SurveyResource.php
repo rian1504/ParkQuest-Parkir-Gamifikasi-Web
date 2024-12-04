@@ -72,6 +72,15 @@ class SurveyResource extends Resource
                         'required' => 'Nama Survey wajib diisi',
                     ])
                     ->maxLength(255),
+                FileUpload::make('survey_image')
+                    ->label('Gambar Survey')
+                    ->directory('image/survey')
+                    ->image()
+                    ->columnSpanFull()
+                    ->validationMessages([
+                        'required' => 'Gambar Survey wajib diisi',
+                    ])
+                    ->required(),
                 FileUpload::make('survey_video')
                     ->label('Video Survey')
                     ->directory('video/survey')
@@ -96,6 +105,10 @@ class SurveyResource extends Resource
                 TextColumn::make('survey_name')
                     ->label('Nama Survey')
                     ->searchable(),
+                ImageColumn::make('survey_image')
+                    ->label('Gambar Survey')
+                    ->square()
+                    ->size(80),
                 TextColumn::make('reward')
                     ->label('Hadiah')
                     ->formatStateUsing(fn($record) => $record->reward->reward_amount . ' ' . $record->reward->reward_type->reward_type_name),

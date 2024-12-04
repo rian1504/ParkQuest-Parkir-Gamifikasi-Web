@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('reward_id')->constrained('rewards')->onDelete('cascade');
             $table->string('survey_name');
             $table->string('survey_video');
+            $table->string('survey_image');
             $table->timestamps();
         });
     }
