@@ -70,41 +70,55 @@ class SurveyController extends Controller
             'answers.*.answer' => 'required|string',
         ]);
 
-        // Pastikan survei ada
-        $survey = Survey::find($surveyId);
-        if (!$survey) {
+        // Cek apakah sudah pernah menjawab survey atau belum
+        $cekSurvey = SurveyResponse::where('survey_id', $surveyId)
+            ->where('user_id', $userId)
+            ->exists();
+
+        if ($cekSurvey) {
             // Mengembalikan response API Gagal
             return response([
-                'code' => 404,
+                'code' => 400,
                 'status' => false,
-                'message' => 'Data Survey Tidak Ditemukan',
-            ], 404);
-        }
+                'message' => 'Survey Sudah Diisi',
+            ], 400);
+        } else {
+            // Pastikan survei ada
+            $survey = Survey::find($surveyId);
+            if (!$survey) {
+                // Mengembalikan response API Gagal
+                return response([
+                    'code' => 404,
+                    'status' => false,
+                    'message' => 'Data Survey Tidak Ditemukan',
+                ], 404);
+            }
 
-        // Simpan respons survei
-        $surveyResponse = SurveyResponse::create([
-            'survey_id' => $surveyId,
-            'user_id' => $userId,
-        ]);
-
-        // Simpan jawaban
-        foreach ($validated['answers'] as $answer) {
-            Answer::create([
-                'survey_response_id' => $surveyResponse->id,
-                'question_id' => $answer['question_id'],
-                'answer' => $answer['answer'],
+            // Simpan respons survei
+            $surveyResponse = SurveyResponse::create([
+                'survey_id' => $surveyId,
+                'user_id' => $userId,
             ]);
+
+            // Simpan jawaban
+            foreach ($validated['answers'] as $answer) {
+                Answer::create([
+                    'survey_response_id' => $surveyResponse->id,
+                    'question_id' => $answer['question_id'],
+                    'answer' => $answer['answer'],
+                ]);
+            }
+
+            // Menambahkan exp user
+            $user = User::findOrFail($userId);
+            $user->increment('EXP', 15);
+
+            // Mengembalikan response API
+            return response([
+                'code' => 200,
+                'status' => true,
+                'message' => 'Berhasil Melakukan Survey',
+            ], 200);
         }
-
-        // Menambahkan exp user
-        $user = User::findOrFail($userId);
-        $user->increment('EXP', 15);
-
-        // Mengembalikan response API
-        return response([
-            'code' => 200,
-            'status' => true,
-            'message' => 'Berhasil Melakukan Survey',
-        ], 200);
     }
 }
