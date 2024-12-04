@@ -19,9 +19,9 @@ class MissionController extends Controller
         $userId = Auth::user()->id;
 
         // Ambil semua misi daily
-        // $dailyMission = MissionCategory::join('missions', 'mission_categories.id', '=', 'missions.mission_category_id')
-        //     ->where('mission_category_name', 'Daily')->get();
-        $dailyMission = Mission::where('mission_category_id', 1)->get();
+        $dailyMission = Mission::whereHas('mission_category', function ($query) {
+            $query->where('mission_category_name', 'Daily');
+        })->get();
 
         // Ambil user mission
         $userMission = UserMission::firstOrNew(['user_id' => $userId, 'mission_id' => $dailyMission->first()->id]);
@@ -41,12 +41,15 @@ class MissionController extends Controller
             ], 400);
         }
 
-        // Menambahkan streak
-        if ($lastLogin && $lastLogin->diffInDays($currentDate) === 1) {
-            $userMission->streak += 1;
-        } else {
-            $userMission->streak = 1;
-        }
+        // Tingkatkan streak
+        $userMission->streak += 1;
+
+        // // Menambahkan streak dan reset jika tidak beruntun
+        // if ($lastLogin && $lastLogin->diffInDays($currentDate) === 1) {
+        //     $userMission->streak += 1;
+        // } else {
+        //     $userMission->streak = 1;
+        // }
 
         // Cari hadiah sesuai streak
         $currentMission = $dailyMission->first(function ($mission) use ($userMission) {
@@ -55,7 +58,6 @@ class MissionController extends Controller
 
         if ($currentMission) {
             $reward = $currentMission->reward;
-            // $reward = $currentMission->mission->reward;
 
             // Berikan hadiah ke pengguna
             $user = User::findOrFail($userId);

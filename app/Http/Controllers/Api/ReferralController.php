@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Models\Mission;
 use App\Models\RewardType;
 use App\Models\UserMission;
 use Illuminate\Http\Request;
 use App\Models\ReferralUsage;
-use App\Http\Controllers\Controller;
 use App\Models\MissionCategory;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class ReferralController extends Controller
@@ -97,11 +98,12 @@ class ReferralController extends Controller
                 ]);
 
                 // Ambil semua misi lifetime
-                $mission = MissionCategory::join('missions', 'mission_categories.id', '=', 'missions.mission_category_id')
-                    ->where('mission_category_name', 'Lifetime')->get();
+                $mission = Mission::whereHas('mission_category', function ($query) {
+                    $query->where('mission_category_name', 'Lifetime');
+                })->first();
 
                 // Ambil user mission
-                $userMission = UserMission::firstOrNew(['user_id' => $usageUserId, 'mission_id' => $mission->first()->id]);
+                $userMission = UserMission::firstOrNew(['user_id' => $usageUserId, 'mission_id' => $mission->id]);
 
                 // Tingkatkan streak
                 $userMission->streak += 1;
@@ -111,7 +113,7 @@ class ReferralController extends Controller
                     $userMission->status = 'completed';
 
                     // Berikan hadiah kepada pengguna
-                    $reward = $mission->first()->reward;
+                    $reward = $mission?->reward;
                     $user = User::findOrFail($usageUserId);
                     $user->increment('coin', $reward->reward_amount);
                 } else {
