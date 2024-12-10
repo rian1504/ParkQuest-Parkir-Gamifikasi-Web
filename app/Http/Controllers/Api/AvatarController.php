@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Avatar;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Rarity;
 use App\Models\User;
 use App\Models\UserAvatar;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,7 @@ class AvatarController extends Controller
     public function shopBasic()
     {
         // Mengambil semua data avatar basic
-        $data = Avatar::join('rarities', 'avatars.rarity_id', '=', 'rarities.id')
+        $data = Rarity::join('avatars', 'avatars.rarity_id', '=', 'rarities.id')
             ->where('rarity_name', 'basic')
             ->whereNotIn('avatars.id', function ($query) {
                 $query->select('avatar_id')
@@ -36,7 +37,7 @@ class AvatarController extends Controller
     public function shopRare()
     {
         // Mengambil semua data avatar rare
-        $data = Avatar::join('rarities', 'avatars.rarity_id', '=', 'rarities.id')
+        $data = Rarity::join('avatars', 'avatars.rarity_id', '=', 'rarities.id')
             ->where('rarity_name', 'rare')
             ->whereNotIn('avatars.id', function ($query) {
                 $query->select('avatar_id')
@@ -57,7 +58,7 @@ class AvatarController extends Controller
     public function shopLegendary()
     {
         // Mengambil semua data avatar legendary
-        $data = Avatar::join('rarities', 'avatars.rarity_id', '=', 'rarities.id')
+        $data = Rarity::join('avatars', 'avatars.rarity_id', '=', 'rarities.id')
             ->where('rarity_name', 'legendary')
             ->whereNotIn('avatars.id', function ($query) {
                 $query->select('avatar_id')
