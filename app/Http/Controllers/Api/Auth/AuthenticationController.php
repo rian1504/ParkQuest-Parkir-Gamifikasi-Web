@@ -92,7 +92,16 @@ class AuthenticationController extends Controller
         ]);
 
         // Mengecek apakah data sesuai dengan database
-        $user = User::whereUsername($request->username)->where('role_id', $request->role_id)->first();
+        $userQuery = User::whereUsername($request->username)->where('role_id', $request->role_id);
+
+        // Mengambil data user Role Eksternal
+        if ($userQuery->first()->role_id == 2) {
+            $userQuery->with('eksternal');
+        }
+
+        // Ambil data user
+        $user = $userQuery->first();
+
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response([
                 'code' => 422,
