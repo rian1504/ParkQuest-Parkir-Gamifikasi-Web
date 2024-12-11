@@ -58,7 +58,7 @@ class ParkRecommendationController extends Controller
 
         // Menambahkan exp ke user
         $recommendationUser = User::findOrFail($userId);
-        $recommendationUser->increment('total_exp', 20);
+        $recommendationUser->increment('total_exp', 10);
 
         // Mengembalikan response API
         return response([

@@ -48,10 +48,17 @@ class ParkSearchController extends Controller
         ], 200);
     }
 
-    // Mengambil semua data rekomendasi
-    public function parkRecommendation()
+    // Mengambil data rekomendasi berdasarkan area yang dipilih
+    public function parkRecommendation(ParkArea $parkArea)
     {
-        $data = ParkRecommendation::where('capacity', '>', 0)->get();
+        // Mengambil id user login
+        $userId = Auth::user()->id;
+
+        $data = ParkRecommendation::where('park_area_id', $parkArea->id)
+            ->with('user')
+            ->where('capacity', '>', 0)
+            ->where('user_id', '!=', $userId)
+            ->get();
 
         // Mengembalikan response API
         return response([
@@ -59,6 +66,24 @@ class ParkSearchController extends Controller
             'status' => true,
             'data' => $data,
             'message' => 'Berhasil Mengambil Data Rekomendasi Parkir',
+        ], 200);
+    }
+
+    // Mengambil detail data rekomendasi berdasarkan area yang dipilih
+    public function parkRecommendationDetail(ParkRecommendation $parkRecommendation)
+    {
+        // Mengambil id park recommendation
+        $parkRecommendationId = $parkRecommendation->id;
+
+        // Mengambil detail data park recommendation
+        $data = ParkRecommendation::with('user')->findOrFail($parkRecommendationId);
+
+        // Mengembalikan response API
+        return response([
+            'code' => 200,
+            'status' => true,
+            'data' => $data,
+            'message' => 'Berhasil Mengambil Detail Data Rekomendasi Parkir',
         ], 200);
     }
 

@@ -9,6 +9,7 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -89,9 +90,9 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(ParkRecommendation::class);
     }
 
-    public function eksternal(): HasMany
+    public function eksternal(): HasOne
     {
-        return $this->hasMany(Eksternal::class);
+        return $this->hasOne(Eksternal::class);
     }
 
     public function referral_usage(): HasMany

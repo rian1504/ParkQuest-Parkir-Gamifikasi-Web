@@ -39,7 +39,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Pencarian Parkir
     Route::get('/parkAreaSearch', [ParkSearchController::class, 'parkArea']);
     Route::get('/parkData/{parkArea}', [ParkSearchController::class, 'parkData']);
-    Route::get('/parkRecommendation', [ParkSearchController::class, 'parkRecommendation']);
+    Route::get('/parkRecommendation/{parkArea}', [ParkSearchController::class, 'parkRecommendation']);
+    Route::get('/parkRecommendationDetail/{parkRecommendation}', [ParkSearchController::class, 'parkRecommendationDetail']);
     Route::post('/parkRecommendationAccepted/{parkRecommendation}', [ParkSearchController::class, 'parkRecommendationAccepted']);
 
     // Avatar
