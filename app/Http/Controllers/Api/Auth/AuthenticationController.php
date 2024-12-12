@@ -126,20 +126,26 @@ class AuthenticationController extends Controller
     // Mengambil data user login
     public function profile()
     {
-        // Mengambil data user
-        $user = Auth::user();
+        // Mengambil id user
+        $userId = Auth::user()->id;
+
+        // Mengecek apakah data sesuai dengan database
+        $userQuery = User::where('id', $userId);
 
         // Mengambil data user Role Eksternal
-        if ($user->role_id == 2) {
-            $user = User::with('eksternal')->where('id', $user->id)->get();
+        if ($userQuery->first()->role_id == 2) {
+            $userQuery->with('eksternal');
         }
+
+        // Ambil data user
+        $user = $userQuery->first();
 
         // Mengembalikan response API
         return response([
             'code' => 200,
             'status' => true,
-            'message' => 'Berhasil',
             'data' => $user,
+            'message' => 'Berhasil Mengambil Data User',
         ], 200);
     }
 
