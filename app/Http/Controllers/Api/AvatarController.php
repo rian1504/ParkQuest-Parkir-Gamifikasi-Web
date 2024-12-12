@@ -19,8 +19,12 @@ class AvatarController extends Controller
         $data = Rarity::join('avatars', 'avatars.rarity_id', '=', 'rarities.id')
             ->where('rarity_name', 'basic')
             ->whereNotIn('avatars.id', function ($query) {
+                // Mengambil user id
+                $userId = Auth::user()->id;
+
                 $query->select('avatar_id')
-                    ->from('user_avatars');
+                    ->from('user_avatars')
+                    ->where('user_id', $userId);
             })
             ->get();
 
@@ -40,8 +44,12 @@ class AvatarController extends Controller
         $data = Rarity::join('avatars', 'avatars.rarity_id', '=', 'rarities.id')
             ->where('rarity_name', 'rare')
             ->whereNotIn('avatars.id', function ($query) {
+                // Mengambil user id
+                $userId = Auth::user()->id;
+
                 $query->select('avatar_id')
-                    ->from('user_avatars');
+                    ->from('user_avatars')
+                    ->where('user_id', $userId);
             })
             ->get();
 
@@ -61,8 +69,12 @@ class AvatarController extends Controller
         $data = Rarity::join('avatars', 'avatars.rarity_id', '=', 'rarities.id')
             ->where('rarity_name', 'legendary')
             ->whereNotIn('avatars.id', function ($query) {
+                // Mengambil user id
+                $userId = Auth::user()->id;
+
                 $query->select('avatar_id')
-                    ->from('user_avatars');
+                    ->from('user_avatars')
+                    ->where('user_id', $userId);
             })
             ->get();
 
@@ -82,7 +94,7 @@ class AvatarController extends Controller
         $avatarId = $avatar->id;
 
         // Mengambil detail data avatar
-        $data = Avatar::with('rarity')->where('id', $avatarId)->get();
+        $data = Avatar::with('rarity')->findOrFail($avatarId);
 
         // Mengembalikan response API
         return response([
