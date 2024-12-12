@@ -111,7 +111,7 @@ class SurveyController extends Controller
 
             // Menambahkan exp user
             $user = User::findOrFail($userId);
-            $user->increment('EXP', 15);
+            $user->increment('total_exp', 15);
 
             // Mengembalikan response API
             return response([
