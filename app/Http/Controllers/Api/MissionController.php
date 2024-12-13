@@ -8,10 +8,29 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\MissionCategory;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class MissionController extends Controller
 {
+    // Mengambil data user missions
+    public function index()
+    {
+        // Mengambil id user
+        $userId = Auth::user()->id;
+
+        // Mengambil data user missions
+        $data = UserMission::where('user_id', $userId)->with('mission')->get();
+
+        // Mengembalikan response API
+        return response([
+            'code' => 200,
+            'status' => true,
+            'data' => $data,
+            'message' => 'Berhasil Mengambil Data Misi',
+        ], 200);
+    }
+
     // Daily Login
     public function dailyLogin()
     {
@@ -32,13 +51,16 @@ class MissionController extends Controller
         // Ambil tanggal hari ini
         $currentDate = now()->startOfDay();
 
-        // Cek apakah sudah login hari ini
-        if ($lastLogin && $lastLogin->equalTo($currentDate)) {
-            return response([
-                'code' => 400,
-                'status' => false,
-                'message' => 'Anda sudah login hari ini.',
-            ], 400);
+        // Cek apakah streak bukan 0
+        if ($userMission->streak != 0) {
+            // Cek apakah sudah login hari ini
+            if ($lastLogin && $lastLogin->equalTo($currentDate)) {
+                return response([
+                    'code' => 400,
+                    'status' => false,
+                    'message' => 'Anda sudah login hari ini.',
+                ], 400);
+            }
         }
 
         // Tingkatkan streak

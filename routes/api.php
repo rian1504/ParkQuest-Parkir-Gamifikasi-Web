@@ -66,6 +66,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/referral', [ReferralController::class, 'store']);
 
     // Misi
+    Route::get('/mission', [MissionController::class, 'index']);
     Route::post('/dailyLogin', [MissionController::class, 'dailyLogin']);
 
     // Survey

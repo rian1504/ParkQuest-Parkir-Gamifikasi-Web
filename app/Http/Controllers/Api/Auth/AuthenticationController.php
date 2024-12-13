@@ -8,8 +8,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Eksternal;
 use App\Models\Leaderboard;
+use App\Models\Mission;
+use App\Models\UserMission;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -62,6 +65,40 @@ class AuthenticationController extends Controller
         }
 
         // Membuat leaderboard
+        Leaderboard::create([
+            'user_id' => $user->id,
+            'rank_id' => 1,
+            'start_date' => Carbon::now()->format('Y-m-d'),
+        ]);
+
+        // Mengambil data mission
+        $missions = Mission::query()
+            ->whereIn('id', function ($query) {
+                $query->select(DB::raw('MIN(id)'))
+                    ->from('missions')
+                    ->where(function ($subQuery) {
+                        $subQuery->whereNull('rank_id')
+                            ->orWhere('rank_id', 1);
+                    })
+                    ->groupBy('mission_category_id');
+            })
+            ->orderBy('mission_category_id')
+            ->get();
+
+        // Mengambil data minggu
+        $week = now()->weekOfYear;
+
+        // Membuat user mission
+        foreach ($missions as $mission) {
+            UserMission::create([
+                'user_id' => $user->id,
+                'mission_id' => $mission->id,
+                'streak' => 0,
+                'status' => 'in progress',
+                'week_number' => $mission->mission_category->mission_category_name == 'Lifetime' ? null : $week,
+            ]);
+        };
+
         Leaderboard::create([
             'user_id' => $user->id,
             'rank_id' => 1,
