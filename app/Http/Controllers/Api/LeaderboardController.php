@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Leaderboard;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,9 +14,11 @@ class LeaderboardController extends Controller
     public function topThree()
     {
         // Mengambil data leaderboard
-        $data = Leaderboard::join('users', 'leaderboards.user_id', '=', 'users.id')
-            ->with('rank')
-            ->orderBy('users.total_exp', 'desc')
+        $data = Leaderboard::with(['user', 'rank'])
+            ->whereHas('user', function (Builder $query) {
+                $query->orderByDesc('total_exp');
+            })
+            ->orderByDesc('rank_id')
             ->limit(3)
             ->get();
 
@@ -32,9 +35,12 @@ class LeaderboardController extends Controller
     public function leaderboard()
     {
         // Mengambil data leaderboard
-        $data = Leaderboard::join('users', 'leaderboards.user_id', '=', 'users.id')
-            ->with('rank')
-            ->orderBy('users.total_exp', 'desc')
+        $data = Leaderboard::with(['user', 'rank'])
+            ->whereHas('user', function (Builder $query) {
+                $query->orderByDesc('total_exp');
+            })
+            ->orderByDesc('rank_id')
+            ->skip(3)
             ->limit(100)
             ->get();
 
@@ -55,7 +61,7 @@ class LeaderboardController extends Controller
 
         // Mengambil data leaderboard
         $data = Leaderboard::with(['user', 'rank'])
-            ->where('user_id', $userId)->get();
+            ->where('user_id', $userId)->first();
 
         // Mengembalikan response API
         return response([
