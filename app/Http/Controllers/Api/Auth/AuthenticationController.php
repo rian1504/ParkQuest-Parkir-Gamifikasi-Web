@@ -26,7 +26,7 @@ class AuthenticationController extends Controller
             'name' => 'required|min:4',
             'username' => 'required|string|min:4|unique:users',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|min:6',
             'identity_number' => 'required|digits_between:6,16|numeric|unique:users',
             'role_id' => 'required|numeric',
         ]);
@@ -98,12 +98,6 @@ class AuthenticationController extends Controller
                 'week_number' => $mission->mission_category->mission_category_name == 'Lifetime' ? null : $week,
             ]);
         };
-
-        Leaderboard::create([
-            'user_id' => $user->id,
-            'rank_id' => 1,
-            'start_date' => Carbon::now()->format('Y-m-d'),
-        ]);
 
         // Membuat token
         $userToken = $user->createToken('user-token')->plainTextToken;
