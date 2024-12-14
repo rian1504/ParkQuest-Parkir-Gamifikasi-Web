@@ -129,22 +129,18 @@ class AuthenticationController extends Controller
         ]);
 
         // Mengecek apakah data sesuai dengan database
-        $userQuery = User::whereUsername($request->username)->where('role_id', $request->role_id);
-
-        // Mengambil data user Role Eksternal
-        if ($userQuery->first()->role_id == 2) {
-            $userQuery->with('eksternal');
-        }
-
-        // Ambil data user
-        $user = $userQuery->first();
-
+        $user = User::whereUsername($request->username)->where('role_id', $request->role_id)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response([
                 'code' => 422,
                 'status' => false,
                 'message' => 'Data salah!',
             ], 422);
+        }
+
+        // Mengambil data user Role Eksternal
+        if ($user->role_id == 2) {
+            $user->load('eksternal');
         }
 
         // Membuat token
