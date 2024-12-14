@@ -18,7 +18,6 @@ class LeaderboardController extends Controller
             ->whereHas('user', function (Builder $query) {
                 $query->orderByDesc('total_exp');
             })
-            ->orderByDesc('rank_id')
             ->limit(3)
             ->get();
 
@@ -39,7 +38,6 @@ class LeaderboardController extends Controller
             ->whereHas('user', function (Builder $query) {
                 $query->orderByDesc('total_exp');
             })
-            ->orderByDesc('rank_id')
             ->skip(3)
             ->limit(100)
             ->get();
