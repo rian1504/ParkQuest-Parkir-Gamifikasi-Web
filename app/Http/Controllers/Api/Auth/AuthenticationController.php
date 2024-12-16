@@ -106,9 +106,9 @@ class AuthenticationController extends Controller
         return response([
             'code' => 201,
             'status' => true,
-            'message' => 'Berhasil Registrasi',
             'data' => $user,
             'token' => $userToken,
+            'message' => 'Berhasil Registrasi',
         ], 201);
     }
 
@@ -144,9 +144,9 @@ class AuthenticationController extends Controller
         return response([
             'code' => 200,
             'status' => true,
-            'message' => 'Berhasil Login',
             'data' => $user,
             'token' => $userToken,
+            'message' => 'Berhasil Login',
         ], 200);
     }
 

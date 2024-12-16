@@ -52,7 +52,7 @@ class ParkRecommendationController extends Controller
             'park_area_id' => $parkAreaId,
             'user_id' => $userId,
             'capacity' => $request->capacity,
-            'image' => $image->hashName(),
+            'image' => 'image/park_recommendation/' . $image->hashName(),
             'description' => $request->description,
         ]);
 
