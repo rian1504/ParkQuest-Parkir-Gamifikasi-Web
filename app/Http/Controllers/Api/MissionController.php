@@ -38,15 +38,35 @@ class MissionController extends Controller
         $userId = Auth::user()->id;
 
         // Ambil semua misi daily
-        $dailyMission = Mission::whereHas('mission_category', function ($query) {
+        $dailyMissions = Mission::whereHas('mission_category', function ($query) {
             $query->where('mission_category_name', 'Daily');
         })->get();
 
-        // Ambil user mission
-        $userMission = UserMission::firstOrNew(['user_id' => $userId, 'mission_id' => $dailyMission->first()->id]);
+        // Cari misi yang sesuai dengan streak pengguna
+        $currentStreak = UserMission::where('user_id', $userId)
+            ->where('status', 'in progress')
+            ->value('streak') ?? 0;
 
-        // Cek terakhir login
-        $lastLogin = $userMission->updated_at ? $userMission->updated_at->startOfDay() : null;
+        $currentMission = $dailyMissions->first(function ($mission) use ($currentStreak) {
+            return $mission->day_start <= $currentStreak + 1 && $mission->day_end >= $currentStreak + 1;
+        });
+
+        if (!$currentMission) {
+            return response([
+                'code' => 404,
+                'status' => false,
+                'message' => 'Tidak ada misi yang sesuai dengan streak saat ini.',
+            ], 404);
+        }
+
+        // Cari user mission yang sudah ada berdasarkan user_id
+        $userMission = UserMission::where('user_id', $userId)->first();
+
+        // Jika tidak ada user mission, buat baru
+        if (!$userMission) {
+            $userMission = new UserMission();
+            $userMission->user_id = $userId;
+        }
 
         // Ambil tanggal hari ini
         $currentDate = now()->startOfDay();
@@ -54,7 +74,7 @@ class MissionController extends Controller
         // Cek apakah streak bukan 0
         if ($userMission->streak != 0) {
             // Cek apakah sudah login hari ini
-            if ($lastLogin && $lastLogin->equalTo($currentDate)) {
+            if ($userMission->updated_at && $userMission->updated_at->startOfDay()->equalTo($currentDate)) {
                 return response([
                     'code' => 400,
                     'status' => false,
@@ -66,37 +86,25 @@ class MissionController extends Controller
         // Tingkatkan streak
         $userMission->streak += 1;
 
-        // // Menambahkan streak dan reset jika tidak beruntun
-        // if ($lastLogin && $lastLogin->diffInDays($currentDate) === 1) {
-        //     $userMission->streak += 1;
-        // } else {
-        //     $userMission->streak = 1;
-        // }
-
         // Cari hadiah sesuai streak
-        $currentMission = $dailyMission->first(function ($mission) use ($userMission) {
-            return $mission->day_start <= $userMission->streak && $mission->day_end >= $userMission->streak;
-        });
+        $reward = $currentMission->reward;
 
-        if ($currentMission) {
-            $reward = $currentMission->reward;
+        // Berikan hadiah ke pengguna
+        $user = User::findOrFail($userId);
+        $user->increment('coin', $reward->reward_amount);
 
-            // Berikan hadiah ke pengguna
-            $user = User::findOrFail($userId);
-            $user->increment('coin', $reward->reward_amount);
-
-            // Tandai misi selesai jika streak mencapai batas maksimum
-            if ($userMission->streak === 7) {
-                $userMission->status = 'completed';
-            } else {
-                $userMission->status = 'in progress';
-            }
+        // Tandai misi selesai jika streak mencapai batas maksimum
+        if ($userMission->streak === 7) {
+            $userMission->status = 'completed';
+        } else {
+            $userMission->status = 'in progress';
         }
 
         // Simpan minggu saat ini
         $userMission->week_number = now()->weekOfYear;
 
         // Simpan data user mission
+        $userMission->mission_id = $currentMission->id;
         $userMission->updated_at = $currentDate;
         $userMission->save();
 

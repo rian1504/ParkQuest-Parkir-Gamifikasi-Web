@@ -58,6 +58,7 @@ class ParkSearchController extends Controller
             ->with('user')
             ->where('capacity', '>', 0)
             ->where('user_id', '!=', $userId)
+            ->latest()
             ->get();
 
         // Mengembalikan response API
