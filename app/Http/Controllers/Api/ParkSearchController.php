@@ -121,6 +121,9 @@ class ParkSearchController extends Controller
             $acceptantUser = User::findOrFail($acceptantUserId);
             $acceptantUser->increment('total_exp', 20);
 
+            // Update rank
+            $acceptantUser->updateRank();
+
             // Mengambil recommendation reward id
             $recommendationRewardId = RewardType::join('rewards', 'rewards.reward_type_id', '=', 'reward_types.id')
                 ->where('reward_type_name', 'EXP')->where('reward_amount', 100)->first()->id;
@@ -128,6 +131,9 @@ class ParkSearchController extends Controller
             // Menambahkan exp ke user yang merekomendasi
             $recommendationUser = User::findOrFail($recommendationUserId);
             $recommendationUser->increment('total_exp', 100);
+
+            // Update rank
+            $recommendationUser->updateRank();
 
             // Mengurangi kapasitas parkir
             $parkRecommendation->decrement('capacity', 1);
@@ -156,20 +162,26 @@ class ParkSearchController extends Controller
             // Tingkatkan streak
             $userMission->streak += 1;
 
-            // Jika streak mencapai target
-            if (
-                $mission->rank_id == 1 and $userMission->streak >= 5 or $mission->rank_id == 2 and $userMission->streak >= 7 or
-                $mission->rank_id == 3 and $userMission->streak >= 9 or $mission->rank_id == 4 and $userMission->streak >= 11 or
-                $mission->rank_id == 5 and $userMission->streak >= 15
-            ) {
-                $userMission->status = 'completed';
+            // Cek apakah misi sudah selesai atau belum
+            if ($userMission->status == 'in progress') {
+                // Jika streak mencapai target
+                if (
+                    $mission->rank_id == 1 and $userMission->streak >= 5 or $mission->rank_id == 2 and $userMission->streak >= 7 or
+                    $mission->rank_id == 3 and $userMission->streak >= 9 or $mission->rank_id == 4 and $userMission->streak >= 11 or
+                    $mission->rank_id == 5 and $userMission->streak >= 15
+                ) {
+                    $userMission->status = 'completed';
 
-                // Berikan hadiah kepada pengguna
-                $reward = $mission?->reward;
-                $user = User::findOrFail($recommendationUserId);
-                $user->increment('total_exp', $reward->reward_amount);
-            } else {
-                $userMission->status = 'in progress';
+                    // Berikan hadiah kepada pengguna
+                    $reward = $mission?->reward;
+                    $user = User::findOrFail($recommendationUserId);
+                    $user->increment('total_exp', $reward->reward_amount);
+
+                    // Update rank
+                    $user->updateRank();
+                } else {
+                    $userMission->status = 'in progress';
+                }
             }
 
             // Simpan minggu saat ini

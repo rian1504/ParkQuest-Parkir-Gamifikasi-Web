@@ -105,13 +105,37 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(UserMission::class);
     }
 
-    public function leaderboard(): HasMany
+    public function leaderboard(): HasOne
     {
-        return $this->hasMany(Leaderboard::class);
+        return $this->hasOne(Leaderboard::class);
     }
 
     public function user_avatar(): HasMany
     {
         return $this->hasMany(UserAvatar::class);
+    }
+
+    public function updateRank()
+    {
+        // Ambil rank yang sesuai berdasarkan total_exp pengguna
+        $newRank = Rank::where('exp_required', '<=', $this->total_exp)
+            ->orderBy('exp_required', 'desc')
+            ->first();
+
+        // Jika rank ditemukan dan berbeda dengan rank saat ini, update rank_id
+        if ($newRank && $newRank->id !== $this->rank_id) {
+            $this->rank_id = $newRank->id;
+            $this->save(); // Event `updated` akan otomatis dipicu
+        }
+    }
+
+    protected static function booted()
+    {
+        static::updated(function ($user) {
+            // Jika rank_id di tabel users berubah, update rank_id di tabel leaderboard
+            if ($user->isDirty('rank_id')) {
+                $user->leaderboard()->update(['rank_id' => $user->rank_id]);
+            }
+        });
     }
 }

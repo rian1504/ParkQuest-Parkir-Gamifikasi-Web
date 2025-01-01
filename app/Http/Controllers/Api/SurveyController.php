@@ -113,6 +113,9 @@ class SurveyController extends Controller
             $user = User::findOrFail($userId);
             $user->increment('total_exp', 15);
 
+            // Update rank
+            $user->updateRank();
+
             // Mengembalikan response API
             return response([
                 'code' => 200,

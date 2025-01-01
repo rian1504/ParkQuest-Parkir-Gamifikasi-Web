@@ -40,7 +40,7 @@ class ParkRecommendationController extends Controller
         $request->validate([
             'capacity' => 'required|numeric',
             'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'description' => 'required|string',
+            'description' => 'required|string|min:10',
         ]);
 
         // Upload gambar
@@ -59,6 +59,9 @@ class ParkRecommendationController extends Controller
         // Menambahkan exp ke user
         $recommendationUser = User::findOrFail($userId);
         $recommendationUser->increment('total_exp', 10);
+
+        // Update rank
+        $recommendationUser->updateRank();
 
         // Mengembalikan response API
         return response([
