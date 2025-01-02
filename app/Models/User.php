@@ -135,6 +135,26 @@ class User extends Authenticatable implements FilamentUser
             // Jika rank_id di tabel users berubah, update rank_id di tabel leaderboard
             if ($user->isDirty('rank_id')) {
                 $user->leaderboard()->update(['rank_id' => $user->rank_id]);
+
+                // Ambil misi weekly berdasarkan rank_id yang baru
+                $weeklyMission = Mission::whereHas('mission_category', function ($query) {
+                    $query->where('mission_category_name', 'Weekly');
+                })
+                    ->where('rank_id', $user->rank_id)
+                    ->first();
+
+                if ($weeklyMission) {
+                    // Update UserMission yang berkategori weekly untuk user ini
+                    UserMission::where('user_id', $user->id)
+                        ->whereHas('mission.mission_category', function ($query) {
+                            $query->where('mission_category_name', 'Weekly');
+                        })
+                        ->update([
+                            'mission_id' => $weeklyMission->id,
+                            'streak' => 0,
+                            'status' => 'in progress'
+                        ]);
+                }
             }
         });
     }

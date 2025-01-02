@@ -159,6 +159,11 @@ class ParkSearchController extends Controller
             // Ambil user mission
             $userMission = UserMission::firstOrNew(['user_id' => $recommendationUserId, 'mission_id' => $mission->id]);
 
+            // Set default value for status if it's null
+            if ($userMission->status === null) {
+                $userMission->status = 'in progress';
+            }
+
             // Tingkatkan streak
             $userMission->streak += 1;
 
@@ -179,8 +184,6 @@ class ParkSearchController extends Controller
 
                     // Update rank
                     $user->updateRank();
-                } else {
-                    $userMission->status = 'in progress';
                 }
             }
 
