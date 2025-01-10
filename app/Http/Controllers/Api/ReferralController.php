@@ -103,7 +103,7 @@ class ReferralController extends Controller
                 })->first();
 
                 // Ambil user mission
-                $userMission = UserMission::firstOrNew(['user_id' => $usageUserId, 'mission_id' => $mission->id]);
+                $userMission = UserMission::firstOrNew(['user_id' => $referralCodeUserId, 'mission_id' => $mission->id]);
 
                 // Tingkatkan streak
                 $userMission->streak += 1;
@@ -114,7 +114,7 @@ class ReferralController extends Controller
 
                     // Berikan hadiah kepada pengguna
                     $reward = $mission?->reward;
-                    $user = User::findOrFail($usageUserId);
+                    $user = User::findOrFail($referralCodeUserId);
                     $user->increment('coin', $reward->reward_amount);
                 } else {
                     $userMission->status = 'in progress';
