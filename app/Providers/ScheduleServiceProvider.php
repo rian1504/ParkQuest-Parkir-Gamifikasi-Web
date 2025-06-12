@@ -21,6 +21,6 @@ class ScheduleServiceProvider extends ServiceProvider
     public function boot(Schedule $schedule): void
     {
         // Jadwalkan reset misi mingguan
-        $schedule->command('missions:reset-weekly')->weeklyOn(1, '00:00'); // Setiap Senin pukul 00:00
+        // $schedule->command('missions:reset-weekly')->weeklyOn(1, '00:00'); // Setiap Senin pukul 00:00
     }
 }
